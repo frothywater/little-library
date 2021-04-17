@@ -23,4 +23,17 @@ export default class Database {
             })
         })
     }
+
+    async transaction(action: () => Promise<void>): Promise<void> {
+        return new Promise((resolve, reject) => {
+            this.connection.beginTransaction(async (err) => {
+                if (err) reject(err)
+                await action()
+                this.connection.commit((err) => {
+                    if (err) this.connection.rollback(() => reject(err))
+                    resolve()
+                })
+            })
+        })
+    }
 }

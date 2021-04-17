@@ -3,15 +3,21 @@ import {
     BookInfo,
     BookRow,
     BookSearchParams,
+    BorrowResult,
+    LibraryOptions,
     ManagerRow,
     PrimitiveData,
 } from "./typing"
 
+const defaultOptions: LibraryOptions = { borrowDuration: 60 }
+
 export default class Library {
     private readonly db: Database
+    options: LibraryOptions
 
-    constructor(db: Database) {
+    constructor(db: Database, options: LibraryOptions = defaultOptions) {
         this.db = db
+        this.options = options
     }
 
     /* MARK: - Query functions */
@@ -46,6 +52,44 @@ export default class Library {
         const sqlString = `select * from book where id in 
         (select book_id from borrow where card_id = ?)`
         return await this.db.query<BookRow>(sqlString, [card_id])
+    }
+
+    async borrowBook(
+        card_id: number,
+        book_id: number,
+        manager_id: number
+    ): Promise<BorrowResult> {
+        const stock = (
+            await this.db.query<{ stock: number }>(
+                "select stock from book where id = ?",
+                [book_id]
+            )
+        )[0].stock
+        if (stock > 0) {
+            const borrowDate = new Date()
+            const dueDate = new Date()
+            dueDate.setDate(borrowDate.getDate() + this.options.borrowDuration)
+
+            await this.db.transaction(async () => {
+                await this.db.query(
+                    "update book set stock = stock - 1 where id = ?",
+                    [book_id]
+                )
+                await this.db.query("insert into borrow values ?", [
+                    [[null, book_id, card_id, borrowDate, dueDate, manager_id]],
+                ])
+            })
+
+            return { success: true }
+        } else {
+            const minDueDate = (
+                await this.db.query<{ date: Date }>(
+                    "select min(due_date) as date from borrow where book_id = ?",
+                    [book_id]
+                )
+            )[0].date
+            return { success: false, estimatedAvailableDate: minDueDate }
+        }
     }
 
     /* MARK: - Helper functions */

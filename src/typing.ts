@@ -1,4 +1,4 @@
-export type PrimitiveData = number | string | Date | PrimitiveData[]
+export type PrimitiveData = number | string | Date | null | PrimitiveData[]
 
 export interface BookRow {
     id: number
@@ -60,4 +60,13 @@ export interface BookSearchParams {
     category?: string
     year?: Range
     price?: Range
+}
+
+export interface BorrowResult {
+    success: boolean
+    estimatedAvailableDate?: Date
+}
+
+export interface LibraryOptions {
+    borrowDuration: number // days
 }
