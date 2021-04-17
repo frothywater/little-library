@@ -15,9 +15,9 @@ export default class Database {
         })
     }
 
-    async query(sqlString: string, values?: PrimitiveData[]): Promise<any[]> {
+    async query<T>(sqlString: string, values?: PrimitiveData[]): Promise<T[]> {
         return new Promise((resolve, reject) => {
-            this.connection.query(sqlString, values, (err, result, _) => {
+            this.connection.query(sqlString, values, (err, result) => {
                 if (err) reject(err)
                 resolve(result)
             })
