@@ -59,13 +59,9 @@ export default class Library {
         book_id: number,
         manager_id: number
     ): Promise<BorrowResult> {
-        const stock = (
-            await this.db.query<{ stock: number }>(
-                "select stock from book where id = ?",
-                [book_id]
-            )
-        )[0].stock
-        if (stock > 0) {
+        const stock = await this.getStock(book_id)
+        const borrowed = await this.getBorrowStatus(card_id, book_id)
+        if (stock > 0 && !borrowed) {
             const borrowDate = new Date()
             const dueDate = new Date()
             dueDate.setDate(borrowDate.getDate() + this.options.borrowDuration)
@@ -76,23 +72,64 @@ export default class Library {
                     [book_id]
                 )
                 await this.db.query("insert into borrow values ?", [
-                    [[null, book_id, card_id, borrowDate, dueDate, manager_id]],
+                    [[book_id, card_id, borrowDate, dueDate, manager_id]],
                 ])
             })
 
             return { success: true }
         } else {
-            const minDueDate = (
-                await this.db.query<{ date: Date }>(
-                    "select min(due_date) as date from borrow where book_id = ?",
-                    [book_id]
-                )
-            )[0].date
-            return { success: false, estimatedAvailableDate: minDueDate }
+            return {
+                success: false,
+                estimatedAvailableDate: await this.getMinDueDate(book_id),
+            }
         }
     }
 
+    async returnBook(card_id: number, book_id: number): Promise<boolean> {
+        const borrowed = await this.getBorrowStatus(card_id, book_id)
+        if (!borrowed) return false
+
+        await this.db.transaction(async () => {
+            await this.db.query(
+                "update book set stock = stock + 1 where id = ?",
+                [book_id]
+            )
+            await this.db.query(
+                "delete from borrow where book_id = ? and card_id = ?",
+                [book_id, card_id]
+            )
+        })
+        return true
+    }
+
     /* MARK: - Helper functions */
+
+    private async getStock(book_id: number): Promise<number> {
+        const result = await this.db.query<{ stock: number }>(
+            "select stock from book where id = ?",
+            [book_id]
+        )
+        return result[0].stock
+    }
+
+    private async getBorrowStatus(
+        card_id: number,
+        book_id: number
+    ): Promise<boolean> {
+        const result = await this.db.query<{ count: number }>(
+            "select count(*) as count from borrow where card_id = ? and book_id = ?",
+            [card_id, book_id]
+        )
+        return result[0].count > 0
+    }
+
+    private async getMinDueDate(book_id: number): Promise<Date> {
+        const result = await this.db.query<{ date: Date }>(
+            "select min(due_date) as date from borrow where book_id = ?",
+            [book_id]
+        )
+        return result[0].date
+    }
 
     private convertBookInfo(book: BookInfo): PrimitiveData[] {
         const { id, title, author, press, category, year, price, count } = book

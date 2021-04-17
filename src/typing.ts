@@ -32,9 +32,8 @@ export interface ManagerRow {
 }
 
 export interface BorrowRow {
-    id: number
-    book_id: number
     card_id: number
+    book_id: number
     borrow_date: Date
     due_date: Date
     manager_id?: number

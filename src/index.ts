@@ -18,6 +18,7 @@ async function main() {
     )
     console.log(await library.getBorrowedBooks(1))
     console.log(await library.borrowBook(1, 1, 1))
+    console.log(await library.returnBook(1, 1))
 
     await db.close()
 }
