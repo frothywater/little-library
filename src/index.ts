@@ -9,29 +9,6 @@ async function main() {
     const library = new Library(db)
 
     console.log(await library.checkManager("cobalt", "12345678"))
-    console.log(
-        await library.addBooks([
-            {
-                title: "Boiled Eggs",
-                author: "Music Eater",
-                press: "Ming Dynasty",
-                category: "Food",
-                price: 10.0,
-                year: 2018,
-                count: 10,
-            },
-        ])
-    )
-    console.log(
-        await library.searchBook(
-            { title: "H", price: [undefined, 20] },
-            "author",
-            false
-        )
-    )
-    console.log(await library.getBorrowedBooks(1))
-    console.log(await library.borrowBook(1, 1, 1))
-    console.log(await library.returnBook(1, 1))
 
     await db.close()
 }

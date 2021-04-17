@@ -1,4 +1,10 @@
-export type PrimitiveData = number | string | Date | null | PrimitiveData[]
+export type PrimitiveData =
+    | number
+    | string
+    | Date
+    | null
+    | undefined
+    | PrimitiveData[]
 
 export interface BookRow {
     id: number
@@ -47,6 +53,12 @@ export interface BookInfo {
     year: number
     price: number
     count: number
+}
+
+export interface CardInfo {
+    name: string
+    address?: string
+    type: CardType
 }
 
 export type Range = [l?: number, r?: number]

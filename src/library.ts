@@ -4,6 +4,7 @@ import {
     BookRow,
     BookSearchParams,
     BorrowResult,
+    CardInfo,
     LibraryOptions,
     ManagerRow,
     PrimitiveData,
@@ -34,6 +35,16 @@ export default class Library {
         await this.db.query("insert into book values ?", [
             books.map(this.convertBookInfo),
         ])
+    }
+
+    async addCard(card: CardInfo): Promise<void> {
+        await this.db.query("insert into card values ?", [
+            [[undefined, card.name, card.address, card.type]],
+        ])
+    }
+
+    async deleteCard(card_id: number): Promise<void> {
+        await this.db.query("delete from card where id = ?", [card_id])
     }
 
     async searchBook(
