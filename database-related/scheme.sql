@@ -32,8 +32,12 @@ create table borrow (
     borrow_date date not null,
     due_date    date not null,
     manager_id  int,
+    primary key (book_id, card_id)
     foreign key (book_id) references book(id) on delete restrict,
     foreign key (card_id) references card(id) on delete restrict,
     foreign key (manager_id) references manager(id) on delete set null,
     constraint borrow_chk_due_gt_borrow check (due_date >= borrow_date)
 );
+
+alter table borrow drop column id;
+alter table borrow add primary key (book_id, card_id);
