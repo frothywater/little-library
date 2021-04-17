@@ -5,6 +5,7 @@ import {
     BookSearchParams,
     BorrowResult,
     CardInfo,
+    CardRow,
     LibraryOptions,
     ManagerRow,
     PrimitiveData,
@@ -45,6 +46,10 @@ export default class Library {
 
     async deleteCard(card_id: number): Promise<void> {
         await this.db.query("delete from card where id = ?", [card_id])
+    }
+
+    async getAllCards(): Promise<CardRow[]> {
+        return await this.db.query<CardRow>("select * from card")
     }
 
     async searchBook(

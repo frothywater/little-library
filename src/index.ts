@@ -9,6 +9,7 @@ async function main() {
     const library = new Library(db)
 
     console.log(await library.checkManager("cobalt", "12345678"))
+    console.log(await library.getAllCards())
 
     await db.close()
 }
