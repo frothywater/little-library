@@ -40,7 +40,6 @@ export interface BorrowRow {
 }
 
 export interface BookInfo {
-    id: number
     title: string
     author: string
     press: string

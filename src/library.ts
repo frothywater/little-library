@@ -132,8 +132,8 @@ export default class Library {
     }
 
     private convertBookInfo(book: BookInfo): PrimitiveData[] {
-        const { id, title, author, press, category, year, price, count } = book
-        return [id, title, author, press, category, year, price, count, count]
+        const { title, author, press, category, year, price, count } = book
+        return [null, title, author, press, category, year, price, count, count]
     }
 
     private getSearchCondition(

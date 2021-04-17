@@ -10,6 +10,19 @@ async function main() {
 
     console.log(await library.checkManager("cobalt", "12345678"))
     console.log(
+        await library.addBooks([
+            {
+                title: "Boiled Eggs",
+                author: "Music Eater",
+                press: "Ming Dynasty",
+                category: "Food",
+                price: 10.0,
+                year: 2018,
+                count: 10,
+            },
+        ])
+    )
+    console.log(
         await library.searchBook(
             { title: "H", price: [undefined, 20] },
             "author",
