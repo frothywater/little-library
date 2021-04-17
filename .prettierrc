@@ -1,1 +1,8 @@
-semi: false
+{
+  "overrides": [
+    {
+      "files": ["*.ts"],
+      "options": { "semi": false, "tabWidth": 4 }
+    }
+  ]
+}
