@@ -1,4 +1,4 @@
-export type PrimitiveData = number | string | Date
+export type PrimitiveData = number | string | Date | PrimitiveData[]
 
 export interface BookRow {
     id: number
@@ -38,4 +38,15 @@ export interface BorrowRow {
     borrow_date: Date
     due_date: Date
     manager_id?: number
+}
+
+export interface BookInfo {
+    id: number
+    title: string
+    author: string
+    press: string
+    category: string
+    year: number
+    price: number
+    count: number
 }

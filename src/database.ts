@@ -1,5 +1,5 @@
 import * as mysql from "mysql"
-import { ManagerRow, PrimitiveData } from "./typing"
+import { BookInfo, ManagerRow, PrimitiveData } from "./typing"
 
 export default class Database {
     private readonly connection: mysql.Connection
@@ -21,6 +21,17 @@ export default class Database {
             [name, password]
         )
         return managers.length == 1
+    }
+
+    async addBooks(books: BookInfo[]): Promise<void> {
+        await this.query("insert into book values ?", [
+            books.map(this.convertBookInfo),
+        ])
+    }
+
+    private convertBookInfo(book: BookInfo): PrimitiveData[] {
+        const { id, title, author, press, category, year, price, count } = book
+        return [id, title, author, press, category, year, price, count, count]
     }
 
     private async query<T>(
