@@ -6,9 +6,6 @@ async function main() {
     const database = "library"
     const db = new Database(user, password, database)
 
-    const result = await db.query("select * from book")
-    console.log(result[0])
-
     await db.close()
 }
 
