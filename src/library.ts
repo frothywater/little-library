@@ -42,6 +42,12 @@ export default class Library {
         return await this.db.query<BookRow>(sqlString, values)
     }
 
+    async getBorrowedBooks(card_id: number): Promise<BookRow[]> {
+        const sqlString = `select * from book where id in 
+        (select book_id from borrow where card_id = ?)`
+        return await this.db.query<BookRow>(sqlString, [card_id])
+    }
+
     /* MARK: - Helper functions */
 
     private convertBookInfo(book: BookInfo): PrimitiveData[] {

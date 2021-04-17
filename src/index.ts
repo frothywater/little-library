@@ -10,10 +10,13 @@ async function main() {
 
     console.log(await library.checkManager("cobalt", "12345678"))
     console.log(
-        await library.searchBook({
-            title: "how",
-        })
+        await library.searchBook(
+            { title: "H", price: [undefined, 20] },
+            "author",
+            false
+        )
     )
+    console.log(await library.getBorrowedBooks(1))
 
     await db.close()
 }
