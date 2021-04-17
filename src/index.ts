@@ -6,6 +6,8 @@ async function main() {
     const database = "library"
     const db = new Database(user, password, database)
 
+    console.log(await db.checkManager("cobalt", "12345678"))
+
     await db.close()
 }
 

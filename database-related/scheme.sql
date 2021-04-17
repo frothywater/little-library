@@ -20,8 +20,8 @@ create table card (
 
 create table manager (
     id          int auto_increment primary key,
+    name        varchar(255) not null,
     password    varchar(255) not null check (length(password) >= 8),
-    name        varchar(255),
     phone       varchar(255)
 );
 
