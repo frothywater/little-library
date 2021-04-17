@@ -7,7 +7,11 @@ async function main() {
     const db = new Database(user, password, database)
 
     console.log(await db.checkManager("cobalt", "12345678"))
+
     await db.close()
 }
 
-main()
+main().catch((err) => {
+    console.error(err.message)
+    console.error(err.sql)
+})

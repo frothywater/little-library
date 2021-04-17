@@ -50,3 +50,14 @@ export interface BookInfo {
     price: number
     count: number
 }
+
+export type Range = [l?: number, r?: number]
+
+export interface BookSearchParams {
+    title?: string
+    author?: string
+    press?: string
+    category?: string
+    year?: Range
+    price?: Range
+}
