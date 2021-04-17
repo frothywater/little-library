@@ -36,10 +36,9 @@ export default class Library {
         ascending = true
     ): Promise<BookRow[]> {
         const [conditionString, values] = this.getSearchCondition(params)
-        const sqlString =
-            "select * from book" +
-            conditionString +
-            ` order by ${sortingKey} ${ascending ? "ASC" : "DESC"}`
+        const sqlString = `select * from book
+             ${conditionString}
+             order by ${sortingKey} ${ascending ? "ASC" : "DESC"}`
         return await this.db.query<BookRow>(sqlString, values)
     }
 
@@ -83,7 +82,7 @@ export default class Library {
         })
 
         const conditionString =
-            conditions.length > 0 ? ` where ${conditions.join(" and ")}` : ""
+            conditions.length > 0 ? `where ${conditions.join(" and ")}` : ""
         return [conditionString, values]
     }
 }
