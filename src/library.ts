@@ -48,6 +48,22 @@ export default class Library {
         await this.db.query("delete from card where id = ?", [card_id])
     }
 
+    async existBook(book_id: number): Promise<boolean> {
+        const books = await this.db.query<BookRow>(
+            "select * from book where id = ?",
+            [book_id]
+        )
+        return books.length == 1
+    }
+
+    async existCard(card_id: number): Promise<boolean> {
+        const cards = await this.db.query<CardRow>(
+            "select * from card where id = ?",
+            [card_id]
+        )
+        return cards.length == 1
+    }
+
     async getAllCards(): Promise<CardRow[]> {
         return await this.db.query<CardRow>("select * from card")
     }
