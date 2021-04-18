@@ -4,6 +4,7 @@ import {
     BookRow,
     BookSearchParams,
     BorrowResult,
+    BorrowRow,
     CardInfo,
     CardRow,
     LibraryOptions,
@@ -29,7 +30,7 @@ export default class Library {
             "select * from manager where name = ? and password = ?",
             [name, password]
         )
-        return managers.length == 1
+        return managers.length > 0
     }
 
     async addBooks(books: BookInfo[]): Promise<void> {
@@ -53,7 +54,7 @@ export default class Library {
             "select * from book where id = ?",
             [book_id]
         )
-        return books.length == 1
+        return books.length > 0
     }
 
     async existCard(card_id: number): Promise<boolean> {
@@ -61,7 +62,7 @@ export default class Library {
             "select * from card where id = ?",
             [card_id]
         )
-        return cards.length == 1
+        return cards.length > 0
     }
 
     async getAllCards(): Promise<CardRow[]> {
@@ -152,11 +153,11 @@ export default class Library {
         card_id: number,
         book_id: number
     ): Promise<boolean> {
-        const result = await this.db.query<{ count: number }>(
-            "select count(*) as count from borrow where card_id = ? and book_id = ?",
+        const result = await this.db.query<BorrowRow>(
+            "select * from borrow where card_id = ? and book_id = ?",
             [card_id, book_id]
         )
-        return result[0].count > 0
+        return result.length > 0
     }
 
     private async getMinDueDate(book_id: number): Promise<Date> {
