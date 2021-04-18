@@ -25,12 +25,15 @@ export default class Library {
 
     /* MARK: - Query functions */
 
-    async checkManager(name: string, password: string): Promise<boolean> {
+    async checkManager(
+        name: string,
+        password: string
+    ): Promise<ManagerRow | null> {
         const managers = await this.db.query<ManagerRow>(
             "select * from manager where name = ? and password = ?",
             [name, password]
         )
-        return managers.length > 0
+        return managers.length > 0 ? managers[0] : null
     }
 
     async addBooks(books: BookInfo[]): Promise<void> {
