@@ -118,6 +118,10 @@ export default class Library {
         return true
     }
 
+    async close(): Promise<void> {
+        await this.db.close()
+    }
+
     /* MARK: - Helper functions */
 
     private async getStock(book_id: number): Promise<number> {
