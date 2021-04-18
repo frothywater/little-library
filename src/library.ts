@@ -138,6 +138,14 @@ export default class Library {
         return true
     }
 
+    async getBorrowStatus(card_id: number, book_id: number): Promise<boolean> {
+        const result = await this.db.query<BorrowRow>(
+            "select * from borrow where card_id = ? and book_id = ?",
+            [card_id, book_id]
+        )
+        return result.length > 0
+    }
+
     async close(): Promise<void> {
         await this.db.close()
     }
@@ -150,17 +158,6 @@ export default class Library {
             [book_id]
         )
         return result[0].stock
-    }
-
-    private async getBorrowStatus(
-        card_id: number,
-        book_id: number
-    ): Promise<boolean> {
-        const result = await this.db.query<BorrowRow>(
-            "select * from borrow where card_id = ? and book_id = ?",
-            [card_id, book_id]
-        )
-        return result.length > 0
     }
 
     private async getMinDueDate(book_id: number): Promise<Date> {
