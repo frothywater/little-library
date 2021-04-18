@@ -8,6 +8,13 @@ export default class Database {
         this.connection = mysql.createConnection({ user, password, database })
     }
 
+    async connect(): Promise<void> {
+        return new Promise((resolve, reject) => {
+            this.connection.connect((err) => reject(err))
+            resolve()
+        })
+    }
+
     async close(): Promise<void> {
         return new Promise((resolve, reject) => {
             this.connection.end((err) => reject(err))
