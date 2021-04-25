@@ -1,15 +1,17 @@
 # little-library
 
 A little library management system based on MySQL.
-This package contains core logic of the system, and should be work together with `little-library-cli` and `little-library-app`.
+This package contains core logic of the system, and should be work together with [`little-library-cli`](https://github.com/frothywater/little-library-cli) and [`little-library-app`](https://github.com/frothywater/little-library-app). Powered by [`mysqljs/mysql`](https://github.com/mysqljs/mysql).
 
-Declaration: This project as a coursework of _Database Manage System_ fully belongs to @frothywater.
+## Declaration
+
+This project as a coursework of _Database Manage System_ fully belongs to @frothywater.
 
 ## Library
 
 Class `Library` provides essential library operation.
 
-```ts
+```typescript
 checkManager(name: string, password: string): Promise<ManagerRow | null>
 
 existBook(book_id: number): Promise<boolean>
@@ -34,7 +36,7 @@ close(): Promise<void>
 
 Class `Database` provides underlying communication with the database.
 
-```ts
+```typescript
 connect(): Promise<void>;
 close(): Promise<void>;
 query<T>(sqlString: string, values?: PrimitiveData[]): Promise<T[]>;
